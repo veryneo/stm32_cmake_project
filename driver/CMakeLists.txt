@@ -1,4 +1,4 @@
 project(DRIVER)
 
 add_subdirectory(bsp)
-add_subdirectory(st_hal)
+add_subdirectory(hal)

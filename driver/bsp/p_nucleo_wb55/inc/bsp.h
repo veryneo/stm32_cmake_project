@@ -20,20 +20,11 @@ extern "C" {
 **  Interface
 **************************************************************/
 
-/**
- * @brief       Initialization of BSP basic function (such as HAL and clock configuration)
- * @retval      None
- * @author      chenwei.gu@murata.com
- */
 extern void bsp_basic_init();
 
-/**
- * @brief       Deinitialization of BSP basic function (such as HAL and clock configuration)
- * @retval      None
- * @author      chenwei.gu@murata.com
- */
 extern void bsp_basic_deinit();
 
+extern void bsp_delay(uint32_t msec);
 
 #ifdef __cplusplus
 }

@@ -5,6 +5,7 @@
 extern "C" {
 #endif
 
+
 /**************************************************************
 **  Include
 **************************************************************/
@@ -19,11 +20,20 @@ extern "C" {
 **************************************************************/
 
 /**
- * @brief BSP error number definition
+ * @brief BSP return value definition
  */
-#define D_BSP_RET_OK                       		(0)
-#define D_BSP_RET_INPUT_ERROR					(-1)
-#define D_BSP_RET_HAL_ERROR						(-2)
+#define D_BSP_RET_OK                       		(0)		/* Ok */
+
+#define D_BSP_RET_INPUT_ERR 					(-10)	/* Input parameter error */
+
+#define D_BSP_RET_HAL_ERR	    				(-20)	/* HAL error */
+#define D_BSP_RET_HAL_BUSY                      (-21)	/* HAL busy */
+#define D_BSP_RET_HAL_TIMEOUT                   (-22)	/* HAL timeout */
+
+#define D_BSP_RET_RB_INIT_ERR                   (-30)   /* Ring buffer initialization error */
+
+#define D_BSP_RET_UART_TX_DMA_BUSY				(-40)	/* UART TX DMA status is busy */
+
 //#define BSP_ERROR_NO_INIT                     -1
 //#define BSP_ERROR_WRONG_PARAM                 -2
 //#define BSP_ERROR_BUSY                        -3
@@ -35,6 +45,12 @@ extern "C" {
 //#define BSP_ERROR_CLOCK_FAILURE               -9
 //#define BSP_ERROR_MSP_FAILURE                 -10
 //#define BSP_ERROR_FEATURE_NOT_SUPPORTED       -11
+
+
+/**************************************************************
+**  Structure
+**************************************************************/
+
 
 
 #ifdef __cplusplus

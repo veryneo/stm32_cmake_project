@@ -40,6 +40,16 @@ extern void bsp_basic_deinit()
 	// TBD
 }
 
+/**
+ * @brief       Time Delay
+ * @param		msec	specifies the delay time length, in milliseconds.
+ * @retval      None
+ * @author      chenwei.gu@murata.com
+ */
+extern void bsp_delay(uint32_t msec)
+{
+	HAL_Delay(msec);
+}
 
 /**************************************************************
 **  Function

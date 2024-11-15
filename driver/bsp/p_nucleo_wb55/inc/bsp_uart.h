@@ -14,28 +14,27 @@ extern "C" {
 
 
 /**************************************************************
+**  Structure
+**************************************************************/
+
+
+
+
+/**************************************************************
 **  Interface
 **************************************************************/
 
-/**
- * @brief       Initialization of UART
- * @retval      None
- * @author      chenwei.gu@murata.com
- */
 extern void bsp_uart_init();
 
-/**
- * @brief       Deinitialization of UART
- * @retval      None
- * @author      chenwei.gu@murata.com
- */
 extern void bsp_uart_deInit();
 
-extern void bsp_uart_send(uint8_t* str);
+extern int bsp_uart1_tx_send();
 
-extern void bsp_uart_receive_start();
+extern int bsp_uart1_rx_enable();
 
-extern void bsp_uart_receive_echo(uint8_t* echo_flag);
+extern int bsp_uart1_tx_fifo_write(const uint8_t* buf, uint8_t size);
+
+extern int bsp_uart1_rx_fifo_read(uint8_t* buf, uint8_t size);
 
 
 #ifdef __cplusplus

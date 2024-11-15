@@ -53,10 +53,21 @@ set(CMAKE_C_FLAGS                      	"${PRJ_MCPU} -std=gnu11 ${PRJ_MFPU} ${PR
 set(CMAKE_EXE_LINKER_FLAGS             	"-T${PRJ_LINKER_SCRIPT} ${PRJ_RUNTIME_LIBRARY_SYSCALLS} -Wl,-Map=${PRJ_MAP_NAME}.map -Wl,--gc-sections -static -Wl,--start-group -lc -lm -Wl,--end-group")
 set(CMAKE_ASM_FLAGS                    	"${CMAKE_C_FLAGS} -x assembler-with-cpp")
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY 		${CMAKE_SOURCE_DIR}/output)
+set(CMAKE_VERBOSE_MAKEFILE              OFF)
+
+if(${CMAKE_BUILD_TYPE} STREQUAL "Release" OR 
+   ${CMAKE_BUILD_TYPE} STREQUAL "RELEASE" OR 
+   ${CMAKE_BUILD_TYPE} STREQUAL "release" )
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY 	${CMAKE_SOURCE_DIR}/output/release)
+elseif(${CMAKE_BUILD_TYPE} STREQUAL "Debug" OR
+       ${CMAKE_BUILD_TYPE} STREQUAL "DEBUG" OR 
+       ${CMAKE_BUILD_TYPE} STREQUAL "debug" )
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY 	${CMAKE_SOURCE_DIR}/output/debug)
+endif()
 
 add_subdirectory(app)
 add_subdirectory(driver)
+add_subdirectory(utility)
 
 
 

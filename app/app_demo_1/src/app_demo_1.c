@@ -2,6 +2,8 @@
 
 #include "bsp.h"
 
+
+
 extern int app_demo_1()
 {
     bsp_basic_init();
@@ -12,21 +14,25 @@ extern int app_demo_1()
     bsp_led_on(E_BSP_LED_BLUE);
 
     bsp_uart_init();
-    const char 	str1[] = "hello world\r\n";
-    char 		str2[] = "hello world again\r\n";
-    bsp_uart_send( (uint8_t*)str1);
-    bsp_uart_send( (uint8_t*)str2);
-    bsp_uart_send( (uint8_t*)"hello world again again\r\n");
+    bsp_uart1_rx_enable();
 
-    bsp_uart_receive_start();
+    uint8_t move[80]   		=   {0};
+    uint8_t move_size  		=   80;
+    int     read_size   	=   0;
+    int		write_size_once	=	0;
+    int		write_size_all	=	0;
 
     while (1)
     {
-    	uint8_t echo_flag = 0;
-    	bsp_uart_receive_echo(&echo_flag);
-    	if (1 == echo_flag)
-    	{
-    		bsp_led_toggle(E_BSP_LED_BLUE);
-    	}
+    	read_size = bsp_uart1_rx_fifo_read(move, move_size);
+    	if (read_size)
+        {
+            write_size_once	=	bsp_uart1_tx_fifo_write(move, read_size);
+            write_size_all 	+= 	write_size_once;
+        }
+
+        bsp_uart1_tx_send();
     }
+
+    return 0;
 }
