@@ -3,6 +3,7 @@
 **************************************************************/
 
 #include "bsp_uart.h"
+#include "bsp_errno.h"
 
 #include "stm32wbxx_hal.h"
 

@@ -65,6 +65,8 @@ elseif(${CMAKE_BUILD_TYPE} STREQUAL "Debug" OR
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY 	${CMAKE_SOURCE_DIR}/output/debug)
 endif()
 
+
+add_subdirectory(core)
 add_subdirectory(app)
 add_subdirectory(driver)
 add_subdirectory(utility)

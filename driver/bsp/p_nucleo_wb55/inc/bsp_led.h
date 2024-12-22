@@ -10,7 +10,7 @@ extern "C" {
 **  Include
 **************************************************************/
 
-#include "bsp_def.h"
+#include "stdint.h"
 
 
 /**************************************************************
@@ -45,6 +45,8 @@ extern void bsp_led_on(E_BSP_LED led);
 extern void bsp_led_off(E_BSP_LED led);
 
 extern void bsp_led_toggle(E_BSP_LED led);
+
+extern void bsp_led_delay(uint32_t delay_ms);
 
 
 #ifdef __cplusplus

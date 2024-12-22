@@ -6,12 +6,12 @@
 
 extern int app_demo_1()
 {
-    bsp_basic_init();
-
     bsp_led_init(E_BSP_LED_BLUE);
     bsp_led_init(E_BSP_LED_GREEN);
     bsp_led_init(E_BSP_LED_RED);
+
     bsp_led_on(E_BSP_LED_BLUE);
+    bsp_led_on(E_BSP_LED_GREEN);
 
     bsp_uart_init();
     bsp_uart1_rx_enable();

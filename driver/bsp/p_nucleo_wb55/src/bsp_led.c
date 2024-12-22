@@ -3,6 +3,7 @@
 **************************************************************/
 
 #include "bsp_led.h"
+#include "bsp_errno.h"
 
 #include "stm32wbxx_hal.h"
 
@@ -122,3 +123,15 @@ extern void bsp_led_toggle(E_BSP_LED led)
 {
     HAL_GPIO_TogglePin(gs_gpio_port[led], gs_gpio_pin[led]);
 }
+
+/**
+ * @brief       Time delay (in illiseconds)
+ * @param[in]   delay_ms: Specifies the delay time length, in milliseconds
+ * @retval      None
+ * @author      chenwei.gu@murata.com
+ */
+extern void bsp_led_delay(uint32_t delay_ms)
+{
+    HAL_Delay(delay_ms);
+}
+

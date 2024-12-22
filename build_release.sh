@@ -8,7 +8,7 @@ if [ -d "$DIR_BUILD_RELEASE" ]; then
 else
 	echo "Directory /$DIR_BUILD_RELEASE does not exist."
 	echo "Make Directory /$DIR_BUILD_RELEASE."
-	mkdir $DIR_BUILD_RELEASE
+	mkdir -p $DIR_BUILD_RELEASE
 	echo "Entry Directory /$DIR_BUILD_RELEASE."
 	cd $DIR_BUILD_RELEASE
 fi

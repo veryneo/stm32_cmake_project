@@ -10,21 +10,10 @@ extern "C" {
 **  Include
 **************************************************************/
 
-#include "bsp_def.h"
-#include "bsp_com_it.h"
+#include "bsp_errno.h"
 #include "bsp_led.h"
 #include "bsp_uart.h"
 
-
-/**************************************************************
-**  Interface
-**************************************************************/
-
-extern void bsp_basic_init();
-
-extern void bsp_basic_deinit();
-
-extern void bsp_delay(uint32_t msec);
 
 #ifdef __cplusplus
 }

@@ -1,18 +1,9 @@
-#ifndef __BSP_DEF_H
-#define __BSP_DEF_H
+#ifndef __BSP_ERRNO_H
+#define __BSP_ERRNO_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-
-/**************************************************************
-**  Include
-**************************************************************/
-
-/* Common include file */
-#include "stdint.h"
-#include "string.h"
 
 
 /**************************************************************
