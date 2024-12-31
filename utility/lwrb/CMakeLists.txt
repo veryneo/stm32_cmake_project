@@ -1,7 +1,11 @@
 project(LWRB)
 
-set(LWRB_SRC    ./src/lwrb.c
-                ./src/lwrb_ex.c)
-
-add_library(lib_lwrb STATIC ${LWRB_SRC})
-target_include_directories(lib_lwrb PUBLIC ./inc)              
+add_library(lib_lwrb STATIC)
+target_sources(lib_lwrb 
+    PRIVATE
+    ./src/lwrb.c
+    ./src/lwrb_ex.c
+)
+target_include_directories(lib_lwrb 
+    PUBLIC 
+    ./inc)              
