@@ -14,6 +14,6 @@ else
 fi
 
 rm -rf *
-cmake ../.. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=../../custom_gcc.cmake
+cmake ../.. -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=../../custom_gcc.cmake
 
-make
+ninja

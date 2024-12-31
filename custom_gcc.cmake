@@ -8,7 +8,7 @@ set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 
 # Specify toolchain. NOTE When building from inside STM32CubeIDE the location of the toolchain is resolved by the "MCU Toolchain" project setting (via PATH).  
 #set (TOOLCHAIN_PREFIX   "arm-none-eabi-")
-set(TOOLCHAIN_PREFIX    "/home/gcw/st/stm32cubeide_1.14.0/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.linux64_1.0.200.202406132123/tools/bin/arm-none-eabi-")
+set(TOOLCHAIN_PREFIX    "/opt/st/stm32cubeide_1.17.0/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.linux64_1.1.0.202410170702/tools/bin/arm-none-eabi-")
 set(CMAKE_C_COMPILER    "${TOOLCHAIN_PREFIX}gcc")
 set(CMAKE_ASM_COMPILER  "${TOOLCHAIN_PREFIX}gcc")
 set(CMAKE_CXX_COMPILER  "${TOOLCHAIN_PREFIX}g++")
