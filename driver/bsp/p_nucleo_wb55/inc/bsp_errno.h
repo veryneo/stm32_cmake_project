@@ -25,6 +25,8 @@ extern "C" {
 
 #define D_BSP_RET_UART_TX_DMA_BUSY				(-40)	/* UART TX DMA status is busy */
 
+#define D_BSP_RET_NFCTAG_ERR    				(-50)	/* NFC Tag error */
+
 //#define BSP_ERROR_NO_INIT                     -1
 //#define BSP_ERROR_WRONG_PARAM                 -2
 //#define BSP_ERROR_BUSY                        -3

@@ -12,6 +12,8 @@ extern "C" {
 
 #include "stdint.h"
 
+#include "bsp_errno.h"
+
 
 /**************************************************************
 **  Structure

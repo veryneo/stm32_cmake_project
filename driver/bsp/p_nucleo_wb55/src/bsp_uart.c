@@ -3,7 +3,6 @@
 **************************************************************/
 
 #include "bsp_uart.h"
-#include "bsp_errno.h"
 
 #include "stm32wbxx_hal.h"
 
@@ -61,7 +60,7 @@ static uint8_t 	gs_bsp_uart1_rx_dma_buf[D_BSP_UART_RX_DMA_BUFFER_SIZE];
 
 
 /**************************************************************
-**  Function
+**  Interface
 **************************************************************/
 
 /**
@@ -71,7 +70,7 @@ static uint8_t 	gs_bsp_uart1_rx_dma_buf[D_BSP_UART_RX_DMA_BUFFER_SIZE];
  * @retval      D_BSP_RET_UTILITY_ERR
  * @author      chenwei.gu@murata.com
  */
-static int bsp_uart1_init()
+extern int32_t bsp_uart1_init()
 {
 	int ret = D_BSP_RET_OK;
 
@@ -134,26 +133,12 @@ static int bsp_uart1_init()
 	return ret;
 }
 
-/**************************************************************
-**  Interface
-**************************************************************/
-
 /**
- * @brief       UART initialization
+ * @brief       UART1 deInitialization
  * @retval      None
  * @author      chenwei.gu@murata.com
  */
-extern void bsp_uart_init()
-{
-	bsp_uart1_init();
-}
-
-/**
- * @brief       UART deInitialization
- * @retval      None
- * @author      chenwei.gu@murata.com
- */
-extern void bsp_uart_deInit()
+extern void bsp_uart1_deInit()
 {
 
 }
@@ -167,7 +152,7 @@ extern void bsp_uart_deInit()
  * @retval		D_BSP_RET_HAL_TIMEOUT
  * @author      chenwei.gu@murata.com
  */
-extern int bsp_uart1_tx_send()
+extern int32_t bsp_uart1_tx_send()
 {
 	int 				ret 	=	D_BSP_RET_OK;
 	HAL_StatusTypeDef 	hal_ret =	HAL_OK;
@@ -194,6 +179,10 @@ extern int bsp_uart1_tx_send()
 			hal_ret = HAL_UART_Transmit_DMA(&(gs_bsp_uart1_handle.huart), gs_bsp_uart1_handle.p_tx_dma_buf, read_len);
 			if (HAL_OK!= hal_ret)
 			{
+				
+				/* Reset UART1 TX DMA status */
+				gs_bsp_uart1_handle.tx_dma_status = E_BSP_UART_TX_DMA_STATUS_READY;
+				
 				if (HAL_ERROR == hal_ret)
 				{
 					ret = D_BSP_RET_HAL_ERR;
@@ -210,8 +199,6 @@ extern int bsp_uart1_tx_send()
 					break;
 				}
 
-				/* Reset UART1 TX DMA status */
-				gs_bsp_uart1_handle.tx_dma_status = E_BSP_UART_TX_DMA_STATUS_READY;
 			}
 		}
 		else
@@ -234,7 +221,7 @@ extern int bsp_uart1_tx_send()
  * @retval		D_BSP_RET_HAL_TIMEOUT
  * @author      chenwei.gu@murata.com
  */
-extern int bsp_uart1_rx_enable()
+extern int32_t bsp_uart1_rx_enable()
 {
 	int 				ret 	=	D_BSP_RET_OK;
 	HAL_StatusTypeDef 	hal_ret	=	HAL_OK;
@@ -276,7 +263,7 @@ extern int bsp_uart1_rx_enable()
  * @retval		D_BSP_RET_INPUT_ERROR
  * @author      chenwei.gu@murata.com
  */
-extern int bsp_uart1_tx_fifo_write(const uint8_t* buf, uint8_t size)
+extern int32_t bsp_uart1_tx_fifo_write(const uint8_t* buf, uint8_t size)
 {
 	if (!buf)
 	{
@@ -295,7 +282,7 @@ extern int bsp_uart1_tx_fifo_write(const uint8_t* buf, uint8_t size)
  * @retval		D_BSP_RET_INPUT_ERROR
  * @author      chenwei.gu@murata.com
  */
-extern int bsp_uart1_rx_fifo_read(uint8_t* buf, uint8_t size)
+extern int32_t bsp_uart1_rx_fifo_read(uint8_t* buf, uint8_t size)
 {
 	if (!buf)
 	{
@@ -430,7 +417,7 @@ extern void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
  * @retval 		None
  * @author 		chenwei.gu@murata.com
  */
-void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+extern void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 {
 	/* Set TX DMA status to ready */
 	gs_bsp_uart1_handle.tx_dma_status = E_BSP_UART_TX_DMA_STATUS_READY;
@@ -441,7 +428,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
  * @param  		huart		UART handle
  * @author 		chenwei.gu@murata.com
  */
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart)
+extern void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart)
 {	
 	UNUSED(huart);
 }
@@ -454,7 +441,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart)
  * @retval 		None
  * @author 		chenwei.gu@murata.com
  */
-void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef* huart, uint16_t Size)
+extern void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef* huart, uint16_t Size)
 {
 	if (USART1 == huart->Instance)
 	{
@@ -491,7 +478,7 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef* huart, uint16_t Size)
  * @retval 		None
  * @author 		chenwei.gu@murata.com
  */
-void DMA1_Channel1_IRQHandler(void)
+extern void DMA1_Channel1_IRQHandler(void)
 {
 	HAL_DMA_IRQHandler(&(gs_bsp_uart1_handle.hdma_usart_tx) );
 }
@@ -501,7 +488,7 @@ void DMA1_Channel1_IRQHandler(void)
  * @retval 		None
  * @author 		chenwei.gu@murata.com
  */
-void DMA1_Channel2_IRQHandler(void)
+extern void DMA1_Channel2_IRQHandler(void)
 {
 	HAL_DMA_IRQHandler(&(gs_bsp_uart1_handle.hdma_usart_rx) );
 }

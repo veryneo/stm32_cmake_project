@@ -3,7 +3,6 @@
 **************************************************************/
 
 #include "bsp_led.h"
-#include "bsp_errno.h"
 
 #include "stm32wbxx_hal.h"
 

@@ -10,6 +10,8 @@ extern "C" {
 **  Include
 **************************************************************/
 
+#include "bsp_errno.h"
+
 #include "stdint.h"
 
 
@@ -17,17 +19,17 @@ extern "C" {
 **  Interface
 **************************************************************/
 
-extern void bsp_uart_init();
+extern int32_t bsp_uart1_init();
 
-extern void bsp_uart_deInit();
+extern void bsp_uart1_deInit();
 
-extern int bsp_uart1_tx_send();
+extern int32_t bsp_uart1_tx_send();
 
-extern int bsp_uart1_rx_enable();
+extern int32_t bsp_uart1_rx_enable();
 
-extern int bsp_uart1_tx_fifo_write(const uint8_t* buf, uint8_t size);
+extern int32_t bsp_uart1_tx_fifo_write(const uint8_t* buf, uint8_t size);
 
-extern int bsp_uart1_rx_fifo_read(uint8_t* buf, uint8_t size);
+extern int32_t bsp_uart1_rx_fifo_read(uint8_t* buf, uint8_t size);
 
 
 #ifdef __cplusplus
