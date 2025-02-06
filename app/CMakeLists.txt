@@ -1,3 +1,3 @@
 project(APP)
 
-add_subdirectory(app_demo_1)
+add_subdirectory(app_demo)

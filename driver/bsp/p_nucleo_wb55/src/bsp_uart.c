@@ -143,8 +143,72 @@ extern void bsp_uart1_deInit()
 
 }
 
+extern int32_t bsp_uart1_tx_send_ch(const char ch)
+{
+	int32_t 			ret		=	D_BSP_RET_OK;
+	HAL_StatusTypeDef 	hal_ret =	HAL_OK;
+
+	do
+	{
+		hal_ret = HAL_UART_Transmit(&(gs_bsp_uart1_handle.huart), (uint8_t*)&ch, 1, 1000);
+		if (HAL_OK != hal_ret)
+		{
+			if (HAL_ERROR == hal_ret)
+			{
+				ret = D_BSP_RET_HAL_ERR;
+			}
+			else if (HAL_BUSY == hal_ret)
+			{
+				ret = D_BSP_RET_HAL_BUSY;
+			}
+			else if (HAL_TIMEOUT == hal_ret)
+			{
+				ret = D_BSP_RET_HAL_TIMEOUT;
+			}
+
+			break;
+		}
+
+		ret = D_BSP_RET_OK;
+	} while(0);
+
+	return ret;	
+}
+
+extern int32_t bsp_uart1_tx_send_str(const char* p_str)
+{
+	int32_t 			ret		=	D_BSP_RET_OK;
+	HAL_StatusTypeDef 	hal_ret =	HAL_OK;
+
+	do
+	{
+		hal_ret = HAL_UART_Transmit(&(gs_bsp_uart1_handle.huart), (const uint8_t*)p_str, strlen(p_str), 1000);
+		if (HAL_OK != hal_ret)
+		{
+			if (HAL_ERROR == hal_ret)
+			{
+				ret = D_BSP_RET_HAL_ERR;
+			}
+			else if (HAL_BUSY == hal_ret)
+			{
+				ret = D_BSP_RET_HAL_BUSY;
+			}
+			else if (HAL_TIMEOUT == hal_ret)
+			{
+				ret = D_BSP_RET_HAL_TIMEOUT;
+			}
+
+			break;
+		}
+
+		ret = D_BSP_RET_OK;
+	} while (0);
+	
+	return ret;
+}
+
 /**
- * @brief       UART1 data transmission
+ * @brief       UART1 data transmission through DMA
  * @retval		D_BSP_RET_OK
  * @retval		D_BSP_RET_UART_TX_DMA_BUSY
  * @retval		D_BSP_RET_HAL_ERROR
@@ -152,7 +216,7 @@ extern void bsp_uart1_deInit()
  * @retval		D_BSP_RET_HAL_TIMEOUT
  * @author      chenwei.gu@murata.com
  */
-extern int32_t bsp_uart1_tx_send()
+extern int32_t bsp_uart1_tx_send_dma()
 {
 	int 				ret 	=	D_BSP_RET_OK;
 	HAL_StatusTypeDef 	hal_ret =	HAL_OK;

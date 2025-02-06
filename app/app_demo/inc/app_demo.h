@@ -1,11 +1,11 @@
-#ifndef __APP_DEMO_1_H
-#define __APP_DEMO_1_H
+#ifndef __APP_DEMO_H
+#define __APP_DEMO_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-extern int app_demo_1();
+extern int app_demo();
 
 
 #ifdef __cplusplus

@@ -3,6 +3,7 @@ project(BSP)
 add_library(lib_bsp STATIC)
 target_sources(lib_bsp 
     PRIVATE 
+    ./p_nucleo_wb55/src/bsp.c
     ./p_nucleo_wb55/src/bsp_led.c
     ./p_nucleo_wb55/src/bsp_uart.c    
     ./p_nucleo_wb55/src/bsp_nfc07a1.c

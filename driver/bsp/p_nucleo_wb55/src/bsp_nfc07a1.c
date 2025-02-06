@@ -182,18 +182,21 @@ extern int32_t bsp_nfc07a1_nfctag_id_read(uint8_t* const wai_id)
 
 extern int32_t bsp_nfc07a1_nfctag_it_configure(const uint16_t it_conf)
 {
-    if (gs_bsp_nfc07a1_handle.p_nfctag_drv->ConfigIT == NULL )
+    if (NULL == gs_bsp_nfc07a1_handle.p_nfctag_drv->ConfigIT)
     {
         return D_BSP_RET_NFCTAG_ERR;
     }
 
-    if (gs_bsp_nfc07a1_handle.p_nfctag_drv->ConfigIT(&(gs_bsp_nfc07a1_handle.nfctag_obj), it_conf) != NFCTAG_OK)
+    int32_t nfctag_ret = NFCTAG_OK;
+
+    nfctag_ret = gs_bsp_nfc07a1_handle.p_nfctag_drv->ConfigIT(&(gs_bsp_nfc07a1_handle.nfctag_obj), it_conf);
+    if (NFCTAG_OK != nfctag_ret)
     {
-        return D_BSP_RET_NFCTAG_ERR;
+    	return D_BSP_RET_NFCTAG_ERR;
     }
     else
     {
-        return D_BSP_RET_OK;
+    	return D_BSP_RET_OK;
     }
 }
 
@@ -221,7 +224,7 @@ extern int32_t bsp_nfc07a1_nfctag_data_read(uint8_t* const p_data, const uint16_
         return D_BSP_RET_NFCTAG_ERR;
     }
 
-    if (gs_bsp_nfc07a1_handle.p_nfctag_drv->ReadData(&(gs_bsp_nfc07a1_handle.nfctag_obj), p_data, tar_addr, size) != NFCTAG_OK)
+    if (NFCTAG_OK != gs_bsp_nfc07a1_handle.p_nfctag_drv->ReadData(&(gs_bsp_nfc07a1_handle.nfctag_obj), p_data, tar_addr, size) )
     {
         return D_BSP_RET_NFCTAG_ERR;
     }
@@ -233,12 +236,12 @@ extern int32_t bsp_nfc07a1_nfctag_data_read(uint8_t* const p_data, const uint16_
 
 extern int32_t bsp_nfc07a1_nfctag_data_write(const uint8_t* const p_data, const uint16_t tar_addr, const uint16_t size)
 {
-    if (gs_bsp_nfc07a1_handle.p_nfctag_drv->WriteData == NULL )
+    if (gs_bsp_nfc07a1_handle.p_nfctag_drv->WriteData == NULL)
     {
         return D_BSP_RET_NFCTAG_ERR;
     }
 
-    if (gs_bsp_nfc07a1_handle.p_nfctag_drv->WriteData(&(gs_bsp_nfc07a1_handle.nfctag_obj), p_data,tar_addr, size) != NFCTAG_OK)
+    if (NFCTAG_OK != gs_bsp_nfc07a1_handle.p_nfctag_drv->WriteData(&(gs_bsp_nfc07a1_handle.nfctag_obj), p_data,tar_addr, size) )
     {
         return D_BSP_RET_NFCTAG_ERR;
     }
@@ -308,6 +311,184 @@ extern int32_t bsp_nfc07a1_nfctag_i2cPassword_present(const uint32_t password_ms
     }
 }
 
+extern int32_t bsp_nfc07a1_nfctag_i2cSecuritySessionDyn_get(E_BSP_NFC07A1_NFCTAG_I2C_SS_STATUS_T* const p_ss_status)
+{
+    if (p_ss_status == NULL)
+    {
+        return D_BSP_RET_INPUT_ERR;
+    }
+
+    ST25DVxxKC_I2CSSO_STATUS_E ss_status = ST25DVXXKC_SESSION_CLOSED;
+    
+    if (ST25DVxxKC_ReadI2CSecuritySession_Dyn(&gs_bsp_nfc07a1_handle.nfctag_obj, &ss_status) != NFCTAG_OK)
+    {
+        return D_BSP_RET_NFCTAG_ERR;
+    }
+    else
+    {
+        if (ss_status == ST25DVXXKC_SESSION_CLOSED)
+        {
+            *p_ss_status = E_BSP_NFC07A1_NFCTAG_I2C_SS_STATUS_CLOSED;
+        }
+        else if (ss_status == ST25DVXXKC_SESSION_OPEN)
+        {
+            *p_ss_status = E_BSP_NFC07A1_NFCTAG_I2C_SS_STATUS_OPEN;
+        }
+        else{}
+
+        return D_BSP_RET_OK;
+    }
+}
+
+extern int32_t bsp_nfc07a1_nfctag_i2cUsrZone_create(const uint16_t zone1_len, const uint16_t zone2_len, const uint16_t zone3_len, const uint16_t zone4_len)
+{
+	int32_t nfctag_ret = NFCTAG_OK;
+
+	nfctag_ret = ST25DVxxKC_CreateUserZone(&gs_bsp_nfc07a1_handle.nfctag_obj, zone1_len, zone2_len, zone3_len, zone4_len);
+	if (NFCTAG_OK != nfctag_ret)
+	{
+		return D_BSP_RET_NFCTAG_ERR;
+	}
+	else
+	{
+		return D_BSP_RET_OK;
+	}
+}
+
+extern int32_t bsp_nfc07a1_nfctag_i2cUsrZoneEnd_get(const E_BSP_NFC07A1_NFCTAG_ZONE_END_T zone_end, uint8_t* const p_zone_end)
+{
+	int32_t nfctag_ret = NFCTAG_OK;
+
+	nfctag_ret = ST25DVxxKC_ReadEndZonex(&gs_bsp_nfc07a1_handle.nfctag_obj, zone_end, p_zone_end);
+	if (NFCTAG_OK != nfctag_ret)
+	{
+		return D_BSP_RET_NFCTAG_ERR;
+	}
+	else
+	{
+		return D_BSP_RET_OK;
+	}
+}
+
+extern int32_t bsp_nfc07a1_nfctag_i2cUsrZoneProtect_set(const E_BSP_NFC07A1_NFCTAG_PROT_ZONE_T zone, const E_BSP_NFC07A1_NFCTAG_PROT_CONF_T prot_conf)
+{
+    if (ST25DVxxKC_WriteI2CProtectZonex(&gs_bsp_nfc07a1_handle.nfctag_obj, zone, prot_conf) != NFCTAG_OK)
+    {
+        return D_BSP_RET_NFCTAG_ERR;
+    }
+    else
+    {
+        return D_BSP_RET_OK;
+    }
+}
+
+extern int32_t bsp_nfc07a1_nfctag_i2cUsrZoneProtect_get(const E_BSP_NFC07A1_NFCTAG_PROT_ZONE_T zone, E_BSP_NFC07A1_NFCTAG_PROT_CONF_T* const prot_conf)
+{
+	ST25DVxxKC_I2C_PROT_ZONE_t st25dv_zone = {0};
+
+	if (ST25DVxxKC_ReadI2CProtectZone(&(gs_bsp_nfc07a1_handle.nfctag_obj), &st25dv_zone) )
+	{
+		return D_BSP_RET_NFCTAG_ERR;
+	}
+	else
+	{
+		switch (zone)
+		{
+			case E_BSP_NFC07A1_NFCTAG_PROT_ZONE_1:
+				*prot_conf = st25dv_zone.ProtectZone1;
+				break;
+			case E_BSP_NFC07A1_NFCTAG_PROT_ZONE_2:
+				*prot_conf = st25dv_zone.ProtectZone2;
+				break;
+			case E_BSP_NFC07A1_NFCTAG_PROT_ZONE_3:
+				*prot_conf = st25dv_zone.ProtectZone3;
+				break;
+			case E_BSP_NFC07A1_NFCTAG_PROT_ZONE_4:
+				*prot_conf = st25dv_zone.ProtectZone4;
+				break;
+			default:
+				*prot_conf = E_BSP_NFC07A1_NFCTAG_PROT_CONF_ERROR;
+				break;
+		}
+
+		return D_BSP_RET_OK;
+	}
+}
+
+extern int32_t bsp_nfc07a1_nfctag_i2cUsrMemSize_get(uint32_t* const blk_num, uint32_t* const blk_size)
+{
+    ST25DVxxKC_MEM_SIZE_t mem_size = {0};
+
+    if (ST25DVxxKC_ReadMemSize(&gs_bsp_nfc07a1_handle.nfctag_obj, &mem_size) != NFCTAG_OK)
+    {
+        *blk_num 	=	0;
+        *blk_size 	=	0;
+        return D_BSP_RET_NFCTAG_ERR;
+    }
+    else
+    {
+    	*blk_num	=	mem_size.Mem_Size;
+    	*blk_size	=	mem_size.BlockSize;
+        return D_BSP_RET_OK;
+    }
+}
+
+extern int32_t bsp_nfc07a1_nfctag_mailboxCtrlDyn_reset()
+{
+    if (ST25DVxxKC_ResetMBEN_Dyn(&gs_bsp_nfc07a1_handle.nfctag_obj) != NFCTAG_OK)
+    {
+        return D_BSP_RET_NFCTAG_ERR;
+    }
+    else
+    {
+        return D_BSP_RET_OK;
+    }
+}
+
+extern int32_t bsp_nfc07a1_nfctag_mailboxCtrlDyn_read(uint8_t* const status)
+{
+	if (!status)
+	{
+		return D_BSP_RET_INPUT_ERR;
+	}
+
+	ST25DVxxKC_EN_STATUS_E st25dvxxkc_status = ST25DVXXKC_ENABLE;
+
+	if (ST25DVxxKC_GetMBEN_Dyn(&gs_bsp_nfc07a1_handle.nfctag_obj, &st25dvxxkc_status) != NFCTAG_OK)
+	{
+		*status = 0;
+		return D_BSP_RET_NFCTAG_ERR;
+	}
+	else
+	{
+		*status = st25dvxxkc_status;
+		return D_BSP_RET_OK;
+	}
+}
+
+extern int32_t bsp_nfc07a1_nfctag_lockCCFile_read(uint8_t* const lock0_status, uint8_t* const lock1_status)
+{
+	if ( (!lock0_status) || (!lock1_status) )
+	{
+		return D_BSP_RET_INPUT_ERR;
+	}
+
+	ST25DVxxKC_LOCK_CCFILE_t st25dvxxkc_lockCCFile = {0};
+
+	if (ST25DVxxKC_ReadLockCCFile(&gs_bsp_nfc07a1_handle.nfctag_obj, &st25dvxxkc_lockCCFile) != NFCTAG_OK)
+	{
+		*lock0_status = 0;
+		*lock1_status = 0;
+		return D_BSP_RET_NFCTAG_ERR;
+	}
+	else
+	{
+		*lock0_status = st25dvxxkc_lockCCFile.LckBck0;
+		*lock1_status = st25dvxxkc_lockCCFile.LckBck1;
+		return D_BSP_RET_OK;
+	}
+}
+
 extern void bsp_nfc07a1_led_init(E_BSP_NFC07A1_LED led)
 {
     GPIO_InitTypeDef gpio_initStruct = {0};
@@ -350,6 +531,11 @@ extern void bsp_nfc07a1_led_toggle(E_BSP_NFC07A1_LED led)
     HAL_GPIO_TogglePin(gs_bsp_nfc07a1_led_port[led], gs_bsp_nfc07a1_led_pin[led]);
 }
 
+extern void bsp_nfc07a1_led_delay_ms(uint32_t delay)
+{
+    HAL_Delay(delay);
+}
+
 extern void bsp_nfc07a1_gpo_init(void)
 {
     GPIO_InitTypeDef gpio_initStruct = {0};
@@ -389,12 +575,14 @@ extern void HAL_I2C_MspInit(I2C_HandleTypeDef* hi2c)
     {
     	/* Configure I2C1 Clock */
     	periphClk_initStruct.PeriphClockSelection 	=	RCC_PERIPHCLK_I2C1;
-    	periphClk_initStruct.I2c1ClockSelection 	=	RCC_I2C1CLKSOURCE_SYSCLK;
-        hal_ret = HAL_RCCEx_PeriphCLKConfig(&periphClk_initStruct);
-    	if (hal_ret != HAL_OK)
-        {
-        	(void)hal_ret;
-        }
+    	periphClk_initStruct.I2c1ClockSelection 	=	RCC_I2C1CLKSOURCE_PCLK1;
+	    hal_ret = HAL_RCCEx_PeriphCLKConfig(&periphClk_initStruct);
+	    if (HAL_ERROR == hal_ret)
+	    {
+	    	(void)hal_ret;
+	    }
+
+	    __HAL_RCC_GPIOB_CLK_ENABLE();
 
         /* GPIO Clock enable */
         D_BSP_NFC07A1_I2C_SCL_GPIO_CLK_ENABLE();
@@ -467,37 +655,39 @@ static int32_t bsp_nfc07a1_nfctag_i2C_init(void)
 
     do
     {
-        I2C_HandleTypeDef* hi2c = &(gs_bsp_nfc07a1_handle.i2c_handle);
+        I2C_HandleTypeDef* hi2c1 = &(gs_bsp_nfc07a1_handle.i2c_handle);
 
         /* I2C Initialization */
-        hi2c->Instance               = D_BSP_NFC07A1_I2C_INSTANCE;                 
-        hi2c->Init.Timing            = 0x10B07CB4;
-        hi2c->Init.OwnAddress1       = 0;                
-        hi2c->Init.AddressingMode    = I2C_ADDRESSINGMODE_7BIT;
-        hi2c->Init.DualAddressMode   = I2C_DUALADDRESS_DISABLE;
-        hi2c->Init.OwnAddress2       = 0;
-        hi2c->Init.OwnAddress2Masks  = I2C_OA2_NOMASK;
-        hi2c->Init.GeneralCallMode   = I2C_GENERALCALL_DISABLE;
-        hi2c->Init.NoStretchMode     = I2C_NOSTRETCH_DISABLE;
-        if (HAL_OK != HAL_I2C_Init(hi2c) )
-        {
-            ret = D_BSP_RET_HAL_ERR;
-            break;
-        }
+    	hi2c1->Instance 				=	D_BSP_NFC07A1_I2C_INSTANCE;
+    	hi2c1->Init.Timing 				=	0x00910B1C;
+    	hi2c1->Init.OwnAddress1 		=	0;
+    	hi2c1->Init.AddressingMode 		=	I2C_ADDRESSINGMODE_7BIT;
+    	hi2c1->Init.DualAddressMode 	=	I2C_DUALADDRESS_DISABLE;
+    	hi2c1->Init.OwnAddress2 		=	0;
+    	hi2c1->Init.OwnAddress2Masks 	=	I2C_OA2_NOMASK;
+    	hi2c1->Init.GeneralCallMode 	=	I2C_GENERALCALL_DISABLE;
+    	hi2c1->Init.NoStretchMode 		=	I2C_NOSTRETCH_DISABLE;
+    	if (HAL_OK != HAL_I2C_Init(hi2c1) )
+    	{
+    		ret = D_BSP_RET_HAL_ERR;
+    		break;
+    	}
 
-        /* Configure Analogue Filter */
-        if (HAL_OK != HAL_I2CEx_ConfigAnalogFilter(hi2c, I2C_ANALOGFILTER_ENABLE) )
-        {
-            ret = D_BSP_RET_HAL_BUSY;
-            break;
-        }
 
-        /* Configure Digital Filter */
-        if (HAL_OK != HAL_I2CEx_ConfigDigitalFilter(hi2c, 2) )
-        {
-            ret = D_BSP_RET_HAL_BUSY;
-            break;
-        }
+    	if (HAL_OK != HAL_I2CEx_ConfigAnalogFilter(hi2c1, I2C_ANALOGFILTER_ENABLE) )
+    	{
+    		ret = D_BSP_RET_HAL_ERR;
+    		break;
+    	}
+
+
+    	if (HAL_OK != HAL_I2CEx_ConfigDigitalFilter(hi2c1, 0) )
+    	{
+    		ret = D_BSP_RET_HAL_ERR;
+    		break;
+    	}
+
+    	HAL_I2CEx_EnableFastModePlus(I2C_FASTMODEPLUS_I2C1);
 
         ret = D_BSP_RET_OK;
     } while (0);    
@@ -539,15 +729,8 @@ static int32_t bsp_nfc07a1_nfctag_i2c_isReady(uint16_t dev_addr, uint32_t trials
         hal_ret = HAL_I2C_IsDeviceReady(hi2c, dev_addr, trials, D_BSP_I2C_POLL_TIMEOUT);
         if (HAL_OK != hal_ret)
         {
-            if (HAL_BUSY == hal_ret)
-            {
-                ret = D_BSP_RET_HAL_BUSY;
-            }
-            else if (HAL_ERROR == hal_ret)
-            {
-                ret = D_BSP_RET_HAL_ERR;
-            }
-            else{}
+        	ret = D_BSP_RET_HAL_ERR;
+        	break;
         }
 
         ret = D_BSP_RET_OK;
@@ -639,26 +822,16 @@ static int32_t bsp_nfc07a1_nfctag_i2c_reg16_write(uint16_t dev_addr, uint16_t re
 
     do
     {
-        I2C_HandleTypeDef* hi2c = &(gs_bsp_nfc07a1_handle.i2c_handle);
+        I2C_HandleTypeDef* p_hi2c = &(gs_bsp_nfc07a1_handle.i2c_handle);
 
-        hal_ret = HAL_I2C_Mem_Write(hi2c, dev_addr, reg, I2C_MEMADD_SIZE_16BIT, p_data, length, D_BSP_I2C_POLL_TIMEOUT);
+        hal_ret = HAL_I2C_Mem_Write(p_hi2c, dev_addr, reg, I2C_MEMADD_SIZE_16BIT, p_data, length, D_BSP_I2C_POLL_TIMEOUT);
         if (HAL_OK != hal_ret)
         {
-            if (HAL_ERROR == hal_ret)
-            {
-                /* Get the error code */
-                hal_i2c_errCode = HAL_I2C_GetError(hi2c);
-                (void)hal_i2c_errCode;
-                
-                ret = D_BSP_RET_HAL_ERR;
-                break;
-            }
-            else if (HAL_BUSY == hal_ret)
-            {
-                ret = D_BSP_RET_HAL_BUSY;
-                break;
-            }
-            else{}
+            hal_i2c_errCode = HAL_I2C_GetError(p_hi2c);
+            (void)hal_i2c_errCode;
+
+            ret = D_BSP_RET_HAL_ERR;
+            break;
         }
 
         ret = D_BSP_RET_OK;
@@ -676,26 +849,17 @@ static int32_t bsp_nfc07a1_nfctag_i2c_reg16_read(uint16_t dev_addr, uint16_t reg
 
     do
     {
-        I2C_HandleTypeDef* hi2c = &(gs_bsp_nfc07a1_handle.i2c_handle);
+        I2C_HandleTypeDef* p_hi2c = &(gs_bsp_nfc07a1_handle.i2c_handle);
 
-        hal_ret = HAL_I2C_Mem_Read(hi2c, dev_addr, reg, I2C_MEMADD_SIZE_16BIT, p_data, length, D_BSP_I2C_POLL_TIMEOUT);
+        hal_ret = HAL_I2C_Mem_Read(p_hi2c, dev_addr, reg, I2C_MEMADD_SIZE_16BIT, p_data, length, D_BSP_I2C_POLL_TIMEOUT);
         if (HAL_OK != hal_ret)
         {
-            if (HAL_ERROR == hal_ret)
-            {
-                /* Get the error code */
-                hal_i2c_errCode = HAL_I2C_GetError(hi2c);
-                (void)hal_i2c_errCode;
-                
-                ret = D_BSP_RET_HAL_ERR;
-                break;
-            }
-            else if (HAL_BUSY == hal_ret)
-            {
-                ret = D_BSP_RET_HAL_BUSY;
-                break;
-            }
-            else{}
+            /* Get the error code */
+            hal_i2c_errCode = HAL_I2C_GetError(p_hi2c);
+            (void)hal_i2c_errCode;
+
+            ret = D_BSP_RET_HAL_ERR;
+            break;
         }
 
         ret = D_BSP_RET_OK;

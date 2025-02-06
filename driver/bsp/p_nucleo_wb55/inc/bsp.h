@@ -14,6 +14,8 @@ extern "C" {
 #include "bsp_uart.h"
 #include "bsp_nfc07a1.h"
 
+extern void bsp_delay(uint32_t delay_ms);
+
 
 #ifdef __cplusplus
 }

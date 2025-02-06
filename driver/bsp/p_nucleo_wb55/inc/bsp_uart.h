@@ -23,7 +23,11 @@ extern int32_t bsp_uart1_init();
 
 extern void bsp_uart1_deInit();
 
-extern int32_t bsp_uart1_tx_send();
+extern int32_t bsp_uart1_tx_send_ch(const char ch);
+
+extern int32_t bsp_uart1_tx_send_str(const char* p_str);
+
+extern int32_t bsp_uart1_tx_send_dma();
 
 extern int32_t bsp_uart1_rx_enable();
 
