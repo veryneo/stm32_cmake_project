@@ -7,6 +7,7 @@ target_sources(lib_bsp
     ./p_nucleo_wb55/src/bsp_led.c
     ./p_nucleo_wb55/src/bsp_uart.c    
     ./p_nucleo_wb55/src/bsp_nfc07a1.c
+    ./p_nucleo_wb55/src/bsp_lowpower.c
     ./components/st25dvxxkc/src/st25dvxxkc.c
     ./components/st25dvxxkc/src/st25dvxxkc_reg.c
 )

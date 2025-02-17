@@ -415,7 +415,7 @@ extern int32_t bsp_nfc07a1_nfctag_i2cUsrZoneProtect_get(const E_BSP_NFC07A1_NFCT
 	}
 }
 
-extern int32_t bsp_nfc07a1_nfctag_i2cUsrMemSize_get(uint32_t* const blk_num, uint32_t* const blk_size)
+extern int32_t bsp_nfc07a1_nfctag_i2cUsrMemBlockInfo_get(uint32_t* const blk_num, uint32_t* const blk_size)
 {
     ST25DVxxKC_MEM_SIZE_t mem_size = {0};
 
@@ -429,6 +429,22 @@ extern int32_t bsp_nfc07a1_nfctag_i2cUsrMemSize_get(uint32_t* const blk_num, uin
     {
     	*blk_num	=	mem_size.Mem_Size;
     	*blk_size	=	mem_size.BlockSize;
+        return D_BSP_RET_OK;
+    }
+}
+
+extern int32_t bsp_nfc07a1_nfctag_i2cUsrMemByteSize_get(uint32_t* const byte_size)
+{
+    ST25DVxxKC_MEM_SIZE_t mem_size = {0};
+
+    if (ST25DVxxKC_ReadMemSize(&gs_bsp_nfc07a1_handle.nfctag_obj, &mem_size) != NFCTAG_OK)
+    {
+        *byte_size = 0;
+        return D_BSP_RET_NFCTAG_ERR;
+    }
+    else
+    {
+        *byte_size = (mem_size.Mem_Size + 1) * (mem_size.BlockSize + 1);
         return D_BSP_RET_OK;
     }
 }

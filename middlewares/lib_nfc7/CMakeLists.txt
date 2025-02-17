@@ -1,0 +1,29 @@
+Project(LIB_NFC7)
+
+add_library(lib_nfc7 STATIC)
+target_sources(lib_nfc7 
+    PRIVATE 
+    ./lib_ndef/core/src/lib_NDEF.c
+    ./lib_ndef/core/src/lib_NDEF_AAR.c
+    ./lib_ndef/core/src/lib_NDEF_Bluetooth.c
+    ./lib_ndef/core/src/lib_NDEF_URI.c
+    ./lib_ndef/core/src/lib_NDEF_Wifi.c
+    ./lib_ndef/core/src/lib_NDEF_Handover.c
+    ./lib_ndef/core/src/lib_NDEF_config.c
+    ./lib_ndef/core/src/lib_wrapper.c
+    ./lib_ndef/core/src/tagtype5_wrapper.c
+    ./lib_ndef/core/src/tagtype4_wrapper.c
+    ./lib_ndef/core/src/tagtype3_wrapper.c
+)
+target_include_directories(lib_nfc7
+    PUBLIC
+    ./lib_ndef/core/inc
+    ./common/inc
+)   
+target_link_libraries(lib_nfc7
+    PRIVATE
+    lib_bsp
+)
+add_dependencies(lib_nfc7
+    lib_bsp
+)

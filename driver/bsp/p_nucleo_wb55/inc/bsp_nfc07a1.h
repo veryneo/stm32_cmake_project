@@ -1,5 +1,5 @@
-#ifndef __BSP_NFCTAG_H
-#define __BSP_NFCTAG_H
+#ifndef __BSP_NFC07A1_H
+#define __BSP_NFC07A1_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -21,8 +21,8 @@ extern "C" {
 **  Symbol
 **************************************************************/
 
-#define D_BSP_NFC07A1_NFCTAG_GPO1_ENABLE_MASK            (ST25DVXXKC_GPO1_ENABLE_MASK)
-#define D_BSP_NFC07A1_NFCTAG_GPO1_FILEDCHQNGE_MASK       (ST25DVXXKC_GPO1_FIELDCHANGE_MASK)
+#define D_BSP_NFC07A1_NFCTAG_GPO1_ENABLE_MASK            	(ST25DVXXKC_GPO1_ENABLE_MASK)
+#define D_BSP_NFC07A1_NFCTAG_GPO1_FILEDCHQNGE_MASK       	(ST25DVXXKC_GPO1_FIELDCHANGE_MASK)
 
 
 /**************************************************************
@@ -105,10 +105,12 @@ extern int32_t bsp_nfc07a1_nfctag_i2cUsrZone_create(const uint16_t zone1_len, co
 extern int32_t bsp_nfc07a1_nfctag_i2cUsrZoneProtect_set(const E_BSP_NFC07A1_NFCTAG_PROT_ZONE_T zone, const E_BSP_NFC07A1_NFCTAG_PROT_CONF_T prot_conf);
 extern int32_t bsp_nfc07a1_nfctag_i2cUsrZoneProtect_get(const E_BSP_NFC07A1_NFCTAG_PROT_ZONE_T zone, E_BSP_NFC07A1_NFCTAG_PROT_CONF_T* const prot_conf);
 extern int32_t bsp_nfc07a1_nfctag_i2cUsrZoneEnd_get(const E_BSP_NFC07A1_NFCTAG_ZONE_END_T zone, uint8_t* const p_zone_end);
-extern int32_t bsp_nfc07a1_nfctag_i2cUsrMemSize_get(uint32_t* const blk_num, uint32_t* const blk_size);
+extern int32_t bsp_nfc07a1_nfctag_i2cUsrMemBlockInfo_get(uint32_t* const blk_num, uint32_t* const blk_size);
+extern int32_t bsp_nfc07a1_nfctag_i2cUsrMemByteSize_get(uint32_t* const byte_size);
 extern int32_t bsp_nfc07a1_nfctag_mailboxCtrlDyn_reset();
 extern int32_t bsp_nfc07a1_nfctag_mailboxCtrlDyn_read(uint8_t* const status);
 extern int32_t bsp_nfc07a1_nfctag_lockCCFile_read(uint8_t* const lock0_status, uint8_t* const lock1_status);
+
 
 extern void bsp_nfc07a1_led_init(E_BSP_NFC07A1_LED led);
 extern void bsp_nfc07a1_led_deInit(E_BSP_NFC07A1_LED led);
