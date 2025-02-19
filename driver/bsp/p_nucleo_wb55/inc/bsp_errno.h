@@ -18,10 +18,9 @@ extern "C" {
 #define D_BSP_RET_INPUT_ERR 					(-10)	/* Input parameter error */
 
 #define D_BSP_RET_HAL_ERR	    				(-20)	/* HAL error */
-#define D_BSP_RET_HAL_BUSY                      (-21)	/* HAL busy */
-#define D_BSP_RET_HAL_TIMEOUT                   (-22)	/* HAL timeout */
 
 #define D_BSP_RET_RB_INIT_ERR                   (-30)   /* Ring buffer initialization error */
+#define D_BSP_RET_RB_READY_ERR                  (-31)   /* Ring buffer is not ready */
 
 #define D_BSP_RET_UART_TX_DMA_BUSY				(-40)	/* UART TX DMA status is busy */
 

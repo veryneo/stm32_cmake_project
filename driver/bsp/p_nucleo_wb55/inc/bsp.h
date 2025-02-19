@@ -12,7 +12,7 @@ extern "C" {
 
 #include "bsp_errno.h"
 #include "bsp_led.h"
-#include "bsp_uart.h"
+#include "bsp_serialport.h"
 
 
 #ifdef __cplusplus
