@@ -7,6 +7,8 @@
 
 #include "stm32wbxx_hal.h"
 
+#include "app_conf.h"
+
 
 /**************************************************************
 **  Interface
@@ -76,4 +78,16 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
     HAL_IncTick();
+}
+
+void IPCC_C1_TX_IRQHandler(void)
+{
+	HW_IPCC_Tx_Handler();
+  	  return;
+}
+
+void IPCC_C1_RX_IRQHandler(void)
+{
+	HW_IPCC_Rx_Handler();
+	return;
 }

@@ -1,0 +1,44 @@
+project(STM32_WPAN)
+
+add_library(lib_stm32_wpan STATIC)
+target_sources(lib_stm32_wpan 
+    PRIVATE
+    ./ble/svc/Src/svc_ctl.c
+    ./ble/core/auto/ble_hal_aci.c
+    ./ble/core/auto/ble_hci_le.c
+    ./ble/core/auto/ble_gatt_aci.c
+    ./ble/core/auto/ble_gap_aci.c
+    ./ble/core/auto/ble_l2cap_aci.c
+    ./ble/core/template/osal.c
+    ./utilities/otp.c
+    ./utilities/stm_list.c
+    ./interface/patterns/ble_thread/tl/hci_tl.c
+    ./interface/patterns/ble_thread/tl/shci_tl.c
+    ./interface/patterns/ble_thread/tl/tl_mbox.c
+    ./interface/patterns/ble_thread/tl/hci_tl_if.c
+    ./interface/patterns/ble_thread/tl/shci_tl_if.c
+    ./interface/patterns/ble_thread/shci/shci.c
+    ./port/hw_ipcc.c
+)
+target_include_directories(lib_stm32_wpan
+    PUBLIC
+    ./
+    ./utilities
+    ./ble
+    ./ble/core
+    ./ble/core/auto
+    ./ble/core/template                             
+    ./ble/mesh
+    ./ble/svc/Inc
+    ./interface/patterns/ble_thread
+    ./interface/patterns/ble_thread/tl 
+    ./interface/patterns/ble_thread/shci
+    ./port
+    ../../driver/cmsis/core/inc
+    ../../driver/cmsis/device/ST/STM32WBxx/inc
+    ../../driver/hal/STM32WBxx_HAL_Driver/inc 
+)
+target_compile_definitions(lib_stm32_wpan 
+    PUBLIC   
+    -D${PRJ_MCU_MODEL} 
+)

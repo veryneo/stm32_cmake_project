@@ -13,8 +13,10 @@ target_link_libraries(lib_app_demo
     PRIVATE
     lib_bsp
     lib_nfc7
+    lib_stm32_wpan
 )
 add_dependencies(lib_app_demo
     lib_bsp
     lib_nfc7
+    lib_stm32_wpan
 )

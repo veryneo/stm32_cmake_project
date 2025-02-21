@@ -17,10 +17,13 @@ target_include_directories(${PRJ_EXE_NAME}
 target_link_libraries(${PRJ_EXE_NAME} 
     PRIVATE   
     lib_app_demo
-    lib_hal)
+    lib_hal
+    lib_stm32_wpan
+)
 add_dependencies(${PRJ_EXE_NAME}    
     lib_app_demo
     lib_hal
+    lib_stm32_wpan
 )
 
 # Generate .bin file (Transfer .elf file to .bin file)
