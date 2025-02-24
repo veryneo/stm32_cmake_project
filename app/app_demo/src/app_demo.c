@@ -165,26 +165,29 @@ static void app_demo_ble_custom_service_init();
 // static tBleStatus app_demo_ble_custom_service_char_value_update(uint16_t uuid, uint16_t new_value_len, uint8_t* p_new_value);
 static SVCCTL_EvtAckStatus_t app_demo_ble_custom_service_event_handler(void* event);
 
-static void app_demo_ble_advertising();
+static void app_demo_ble_advertising_start();
+static void app_demo_ble_advertising_stop();
+
+static void app_demo_ble_stack_reset();
 
 extern int app_demo()
 {
-	 uint32_t ret = D_BSP_RET_OK;
-     uint16_t ndef_ret = NDEF_OK;
+	uint32_t ret = D_BSP_RET_OK;
+	uint16_t ndef_ret = NDEF_OK;
 
 	bsp_uart1_init();
 
-    bsp_nfc07a1_led_init(E_BSP_NFC07A1_LED_GREEN);
-    bsp_nfc07a1_led_init(E_BSP_NFC07A1_LED_YELLOW);
-    bsp_nfc07a1_led_init(E_BSP_NFC07A1_LED_BLUE);
+	bsp_nfc07a1_led_init(E_BSP_NFC07A1_LED_GREEN);
+	bsp_nfc07a1_led_init(E_BSP_NFC07A1_LED_YELLOW);
+	bsp_nfc07a1_led_init(E_BSP_NFC07A1_LED_BLUE);
 
-    bsp_nfc07a1_gpo_init();
+	bsp_nfc07a1_gpo_init();
 
-    printf("\r\n");
-    printf("---------------------------------------------\r\n");
-    printf("Demo start ~~~\r\n");
-    printf("---------------------------------------------\r\n");
-    printf("\r\n");
+	printf("\r\n");
+	printf("---------------------------------------------\r\n");
+	printf("Demo start ~~~\r\n");
+	printf("---------------------------------------------\r\n");
+	printf("\r\n");
 
      uint8_t lowpower_standby_flag = 0;
      ret = bsp_lowpower_mode_standby_resume_check(&lowpower_standby_flag);
@@ -196,11 +199,11 @@ extern int app_demo()
      {
          if (lowpower_standby_flag == 1)
          {
-             printf("Resume from standby mode\r\n");
+             printf("System resume from standby mode\r\n");
          }
          else
          {
-        	 printf("Power on\r\n");
+        	 printf("System restart\r\n");
          }
      }
 
@@ -225,6 +228,8 @@ extern int app_demo()
         bsp_nfc07a1_led_toggle(E_BSP_NFC07A1_LED_YELLOW);
         bsp_nfc07a1_led_delay_ms(500);
     }
+
+    bsp_nfc07a1_led_off(E_BSP_NFC07A1_LED_YELLOW);
 
      NfcTag_SelectProtocol(NFCTAG_TYPE5);
 
@@ -280,7 +285,7 @@ extern int app_demo()
 
     app_demo_ble_custom_service_init();
 
-    app_demo_ble_advertising();
+    app_demo_ble_advertising_start();
 
     uint32_t old_tick = HAL_GetTick();
     uint32_t new_tick = 0;
@@ -303,9 +308,21 @@ extern int app_demo()
     		bsp_nfc07a1_led_on(E_BSP_NFC07A1_LED_BLUE);
     	}
 
+    	if (gs_app_demo_ble_conn_flag == E_APP_DEMO_BLE_CONN_FLAG_SET)
+    	{
+    		bsp_nfc07a1_led_off(E_BSP_NFC07A1_LED_BLUE);
+    	}
+
     	new_tick = HAL_GetTick();
     	if (new_tick - old_tick > 30000)
     	{
+    		if (gs_app_demo_ble_conn_flag == E_APP_DEMO_BLE_CONN_FLAG_RESET)
+    		{
+    			app_demo_ble_advertising_stop();
+    		}
+
+    		app_demo_ble_stack_reset();
+
     		bsp_lowpower_mode_standby_enter();
     	}
     }
@@ -1114,7 +1131,7 @@ static SVCCTL_EvtAckStatus_t app_demo_ble_custom_service_event_handler(void* eve
     return return_value;
 }
 
-static void app_demo_ble_advertising()
+static void app_demo_ble_advertising_start()
 {
     tBleStatus ret = BLE_STATUS_SUCCESS;
 
@@ -1137,4 +1154,31 @@ static void app_demo_ble_advertising()
     {
         printf("Update adv data err\r\n");
     }
+
+    printf("BLE advertisement start\r\n");
+
+}
+
+static void app_demo_ble_advertising_stop()
+{
+	tBleStatus ret = BLE_STATUS_SUCCESS;
+
+	ret = aci_gap_set_non_discoverable();
+	if (ret != BLE_STATUS_SUCCESS)
+	{
+		printf("Set BLE non discoverable err\r\n");
+	}
+
+	printf("BLE advertisement stop\r\n");
+}
+
+static void app_demo_ble_stack_reset()
+{
+	tBleStatus  ret = BLE_STATUS_SUCCESS;
+
+	ret = aci_hal_stack_reset();
+	if (ret != BLE_STATUS_SUCCESS)
+	{
+		printf("BLE stack reset err\r\n");
+	}
 }
