@@ -54,12 +54,12 @@
                                                             } while (0)
 
 
-#define D_BSP_NFC07A1_GPO_GPIO_PORT                         GPIOA
-#define D_BSP_NFC07A1_GPO_GPIO_PIN                          GPIO_PIN_6
-#define D_BSP_NFC07A1_GPO_GPIO_CLK_ENABLE()                 __HAL_RCC_GPIOA_CLK_ENABLE()
-#define D_BSP_NFC07A1_GPO_GPIO_CLK_DISABLE()                __HAL_RCC_GPIOA_CLK_DISABLE()
-#define D_BSP_NFC07A1_GPO_EXTI_NUM                          EXTI9_5_IRQn
-#define D_BSP_NFC07A1_GPO_EXTI_PRIORITY                     (0)
+//#define D_BSP_NFC07A1_GPO_GPIO_PORT                         GPIOA
+//#define D_BSP_NFC07A1_GPO_GPIO_PIN                          GPIO_PIN_6
+//#define D_BSP_NFC07A1_GPO_GPIO_CLK_ENABLE()                 __HAL_RCC_GPIOA_CLK_ENABLE()
+//#define D_BSP_NFC07A1_GPO_GPIO_CLK_DISABLE()                __HAL_RCC_GPIOA_CLK_DISABLE()
+//#define D_BSP_NFC07A1_GPO_EXTI_NUM                          EXTI9_5_IRQn
+//#define D_BSP_NFC07A1_GPO_EXTI_PRIORITY                     (0)
 
 
 #define D_BSP_I2C_POLL_TIMEOUT                              (0x1000)
@@ -552,24 +552,24 @@ extern void bsp_nfc07a1_led_delay_ms(uint32_t delay)
     HAL_Delay(delay);
 }
 
-extern void bsp_nfc07a1_gpo_init(void)
-{
-    GPIO_InitTypeDef gpio_initStruct = {0};
-
-    /* Enable the GPO GPIO Clock */
-    D_BSP_NFC07A1_GPO_GPIO_CLK_ENABLE();
-
-    /* Configure the GPO GPIO pin */
-    gpio_initStruct.Pin     = D_BSP_NFC07A1_GPO_GPIO_PIN;
-    gpio_initStruct.Mode    = GPIO_MODE_IT_RISING;
-    gpio_initStruct.Pull    = GPIO_NOPULL;
-    gpio_initStruct.Speed   = GPIO_SPEED_FREQ_VERY_HIGH;
-
-    HAL_GPIO_Init(D_BSP_NFC07A1_GPO_GPIO_PORT, &gpio_initStruct);
-
-    HAL_NVIC_SetPriority(D_BSP_NFC07A1_GPO_EXTI_NUM, D_BSP_NFC07A1_GPO_EXTI_PRIORITY, 0);
-    HAL_NVIC_EnableIRQ(D_BSP_NFC07A1_GPO_EXTI_NUM);
-}
+//extern void bsp_nfc07a1_gpo_init(void)
+//{
+//    GPIO_InitTypeDef gpio_initStruct = {0};
+//
+//    /* Enable the GPO GPIO Clock */
+//    D_BSP_NFC07A1_GPO_GPIO_CLK_ENABLE();
+//
+//    /* Configure the GPO GPIO pin */
+//    gpio_initStruct.Pin     = D_BSP_NFC07A1_GPO_GPIO_PIN;
+//    gpio_initStruct.Mode    = GPIO_MODE_IT_RISING;
+//    gpio_initStruct.Pull    = GPIO_NOPULL;
+//    gpio_initStruct.Speed   = GPIO_SPEED_FREQ_VERY_HIGH;
+//
+//    HAL_GPIO_Init(D_BSP_NFC07A1_GPO_GPIO_PORT, &gpio_initStruct);
+//
+//    HAL_NVIC_SetPriority(D_BSP_NFC07A1_GPO_EXTI_NUM, D_BSP_NFC07A1_GPO_EXTI_PRIORITY, 0);
+//    HAL_NVIC_EnableIRQ(D_BSP_NFC07A1_GPO_EXTI_NUM);
+//}
 
 extern void bsp_nfc07a1_gpo_activeFlag_reset(void)
 {
@@ -644,19 +644,6 @@ extern void HAL_I2C_MspDeInit(I2C_HandleTypeDef* hi2c)
          */
         HAL_GPIO_DeInit(D_BSP_NFC07A1_I2C_SCL_GPIO_PORT, D_BSP_NFC07A1_I2C_SCL_GPIO_PIN);
         HAL_GPIO_DeInit(D_BSP_NFC07A1_I2C_SCA_GPIO_PORT, D_BSP_NFC07A1_I2C_SCA_GPIO_PIN);
-    }
-}
-
-extern void EXTI9_5_IRQHandler(void)
-{
-    HAL_GPIO_EXTI_IRQHandler(D_BSP_NFC07A1_GPO_GPIO_PIN);
-}
-
-extern void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
-    if (D_BSP_NFC07A1_GPO_GPIO_PIN == GPIO_Pin)
-    {
-        gs_bsp_nfc07a1_handle.gpo_activeFlag = 1;
     }
 }
 

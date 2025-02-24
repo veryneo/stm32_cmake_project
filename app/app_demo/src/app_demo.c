@@ -94,6 +94,12 @@ typedef enum
 	E_APP_DEMO_BLE_CONN_FLAG_SET				=	!E_APP_DEMO_BLE_CONN_FLAG_RESET
 } E_APP_DEMO_BLE_CONN_FLAG_T;
 
+typedef enum
+{
+	E_APP_DEMO_LOWPOWER_ENTER_FLAG_RESET		=	0,
+	E_APP_DEMO_LOWPOWER_ENTER_FLAG_SET			=	!E_APP_DEMO_LOWPOWER_ENTER_FLAG_RESET
+} E_APP_DEMO_LOWPOWER_ENTER_FLAG_T;
+
 typedef struct
 {
     uint16_t service_handle;                        /* Service handle */
@@ -144,11 +150,14 @@ static E_APP_DEMO_CPU2_RUN_STATUS_T             gs_app_demo_cpu2_run_status     
 static E_APP_DEMO_SHCI_EVENT_PENDDING_FLAG_T    gs_app_demo_shci_event_pending_flag =   E_APP_DEMO_SHCI_EVENT_PENDING_FLAG_RESET;
 static E_APP_DEMO_HCI_EVENT_PENDDING_FLAG_T     gs_app_demo_hci_event_pending_flag  =   E_APP_DEMO_HCI_EVENT_PENDING_FLAG_RESET;
 static E_APP_DEMO_BLE_CONN_FLAG_T				gs_app_demo_ble_conn_flag			=	E_APP_DEMO_BLE_CONN_FLAG_RESET;
+static E_APP_DEMO_LOWPOWER_ENTER_FLAG_T			ga_app_demo_lowpower_enter_flag		=	E_APP_DEMO_LOWPOWER_ENTER_FLAG_RESET;
 static uint8_t gs_app_demo_cpu2_err_flag = 0;
 
 static S_APP_DEMO_BLE_CUSTOM_SERVICE_CTX_T gs_app_demo_ble_custom_service_ctx;
 
 static uint8_t gs_app_demo_nfctag_ble_bd_addr[D_APP_DEMO_NFCTAG_BLE_MAC_ADDR_STR_LEN] = {0};
+
+static uint16_t gs_app_demo_ble_conn_handle = 0;
 
 static void app_demo_cpu2_system_init();
 static void app_demo_shci_tl_status_notification_callback(SHCI_TL_CmdStatus_t status);
@@ -167,8 +176,10 @@ static SVCCTL_EvtAckStatus_t app_demo_ble_custom_service_event_handler(void* eve
 
 static void app_demo_ble_advertising_start();
 static void app_demo_ble_advertising_stop();
-
+static void app_demo_ble_conn_disconnect();
 static void app_demo_ble_stack_reset();
+
+static void app_demo_lowpower_sw_callback();
 
 extern int app_demo()
 {
@@ -176,12 +187,14 @@ extern int app_demo()
 	uint16_t ndef_ret = NDEF_OK;
 
 	bsp_uart1_init();
+	bsp_switch_sw_init();
+	bsp_switch_sw3_it_callback_set(app_demo_lowpower_sw_callback);
 
 	bsp_nfc07a1_led_init(E_BSP_NFC07A1_LED_GREEN);
 	bsp_nfc07a1_led_init(E_BSP_NFC07A1_LED_YELLOW);
 	bsp_nfc07a1_led_init(E_BSP_NFC07A1_LED_BLUE);
 
-	bsp_nfc07a1_gpo_init();
+//	bsp_nfc07a1_gpo_init();
 
 	printf("\r\n");
 	printf("---------------------------------------------\r\n");
@@ -261,7 +274,7 @@ extern int app_demo()
 	 	}
 
 	 	sAARInfo record_info_aar = {0};
-	 	strcpy(record_info_aar.PackageName, "com.sychip.ble.ai.camera");
+	 	strcpy(record_info_aar.PackageName, "com.fhc.app");
 	 	ndef_ret = NDEF_AddAAR(&record_info_aar);
 	 	if (ndef_ret != NDEF_OK)
 	 	{
@@ -283,12 +296,12 @@ extern int app_demo()
 	 	printf("ERROR of bsp_nfc07a1_nfctag_it_configure !!!");
 	 }
 
-    app_demo_ble_custom_service_init();
+	 SVCCTL_Init();
+
+	 app_demo_ble_custom_service_init();
 
     app_demo_ble_advertising_start();
 
-    uint32_t old_tick = HAL_GetTick();
-    uint32_t new_tick = 0;
     while(1)
     {
     	if (gs_app_demo_shci_event_pending_flag == E_APP_DEMO_SHCI_EVENT_PENDING_FLAG_SET)
@@ -308,17 +321,20 @@ extern int app_demo()
     		bsp_nfc07a1_led_on(E_BSP_NFC07A1_LED_BLUE);
     	}
 
-    	if (gs_app_demo_ble_conn_flag == E_APP_DEMO_BLE_CONN_FLAG_SET)
+    	if (gs_app_demo_ble_conn_flag == E_APP_DEMO_BLE_CONN_FLAG_RESET)
     	{
     		bsp_nfc07a1_led_off(E_BSP_NFC07A1_LED_BLUE);
     	}
 
-    	new_tick = HAL_GetTick();
-    	if (new_tick - old_tick > 30000)
+    	if (ga_app_demo_lowpower_enter_flag == E_APP_DEMO_LOWPOWER_ENTER_FLAG_SET)
     	{
     		if (gs_app_demo_ble_conn_flag == E_APP_DEMO_BLE_CONN_FLAG_RESET)
     		{
     			app_demo_ble_advertising_stop();
+    		}
+    		else
+    		{
+    			app_demo_ble_conn_disconnect();
     		}
 
     		app_demo_ble_stack_reset();
@@ -661,7 +677,9 @@ SVCCTL_UserEvtFlowStatus_t SVCCTL_App_Notification(void *pckt)
             switch (le_meta_evt->subevent)
             {
                 case HCI_LE_CONNECTION_COMPLETE_SUBEVT_CODE:
-                	gs_app_demo_ble_conn_flag = E_APP_DEMO_BLE_CONN_FLAG_SET;
+                	hci_le_connection_complete_event_rp0* connection_complete_event = (hci_le_connection_complete_event_rp0 *)le_meta_evt->data;
+                 	gs_app_demo_ble_conn_handle =	connection_complete_event->Connection_Handle;
+                	gs_app_demo_ble_conn_flag 	=	E_APP_DEMO_BLE_CONN_FLAG_SET;
                     printf("BLE connection establish\r\n");
                     break; /* HCI_LE_CONNECTION_COMPLETE_SUBEVT_CODE */
                 default:
@@ -1172,6 +1190,21 @@ static void app_demo_ble_advertising_stop()
 	printf("BLE advertisement stop\r\n");
 }
 
+static void app_demo_ble_conn_disconnect()
+{
+	tBleStatus ret = BLE_STATUS_SUCCESS;
+
+	uint8_t disconnect_reason = 0x13;
+
+	ret = aci_gap_terminate(gs_app_demo_ble_conn_handle, disconnect_reason);
+	if (ret != BLE_STATUS_SUCCESS)
+	{
+		printf("Terminate BLE connection err\r\n");
+	}
+
+	printf("BLE connection terminate\r\n");
+}
+
 static void app_demo_ble_stack_reset()
 {
 	tBleStatus  ret = BLE_STATUS_SUCCESS;
@@ -1181,4 +1214,9 @@ static void app_demo_ble_stack_reset()
 	{
 		printf("BLE stack reset err\r\n");
 	}
+}
+
+static void app_demo_lowpower_sw_callback()
+{
+	ga_app_demo_lowpower_enter_flag = E_APP_DEMO_LOWPOWER_ENTER_FLAG_SET;
 }

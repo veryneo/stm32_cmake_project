@@ -12,6 +12,7 @@ extern "C" {
 
 #include "bsp_led.h"
 #include "bsp_uart.h"
+#include "bsp_switch.h"
 #include "bsp_nfc07a1.h"
 #include "bsp_lowpower.h"
 
