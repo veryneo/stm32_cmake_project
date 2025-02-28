@@ -2,7 +2,7 @@
 **  Include
 **************************************************************/
 
-#include "app_demo_1.h"
+#include "app_entry.h"
 
 #include "stm32wbxx_hal.h"
 
@@ -24,7 +24,7 @@ int main(void)
 
 	systemClock_config();
 
-    app_demo_1();
+    app_entry();
 }
 
 

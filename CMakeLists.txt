@@ -49,7 +49,7 @@ set(PRJ_MAP_NAME						"${CMAKE_PROJECT_NAME}"											                        
 	
 set(CMAKE_EXECUTABLE_SUFFIX            	".elf")
 set(CMAKE_STATIC_LIBRARY_SUFFIX        	".a")
-set(CMAKE_C_FLAGS                      	"${PRJ_MCPU} -std=gnu11 ${PRJ_MFPU} ${PRJ_MFLOAT_ABI} ${PRJ_RUNTIME_LIBRARY} -mthumb -Wall -Werror")
+set(CMAKE_C_FLAGS                      	"${PRJ_MCPU} -std=gnu11 ${PRJ_MFPU} ${PRJ_MFLOAT_ABI} ${PRJ_RUNTIME_LIBRARY} -mthumb -Wall -Werror -ffunction-sections -fdata-sections")
 set(CMAKE_EXE_LINKER_FLAGS             	"-T${PRJ_LINKER_SCRIPT} ${PRJ_RUNTIME_LIBRARY_SYSCALLS} -Wl,-Map=${PRJ_MAP_NAME}.map -Wl,--gc-sections -static -Wl,--start-group -lc -lm -Wl,--end-group")
 set(CMAKE_ASM_FLAGS                    	"${CMAKE_C_FLAGS} -x assembler-with-cpp")
 
@@ -69,7 +69,8 @@ endif()
 add_subdirectory(core)
 add_subdirectory(app)
 add_subdirectory(driver)
-add_subdirectory(utility)
+add_subdirectory(middlewares)
+add_subdirectory(utilitys)
 
 
 
