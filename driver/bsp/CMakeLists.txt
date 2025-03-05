@@ -4,15 +4,15 @@ project(BSP)
 add_library(lib_bsp_intf INTERFACE)
 target_include_directories(lib_bsp_intf
     INTERFACE   
-    ./p_nucleo_wb55/inc
+    ./${PRJ_BOARD_NAME}/inc
 )
 
 # Implement library
 add_library(lib_bsp STATIC)
 target_sources(lib_bsp 
     PRIVATE 
-    ./p_nucleo_wb55/src/bsp_led.c
-    ./p_nucleo_wb55/src/bsp_serialport.c    
+    ./${PRJ_BOARD_NAME}/src/bsp_led.c
+    ./${PRJ_BOARD_NAME}/src/bsp_serialport.c    
 )
 target_link_libraries(lib_bsp 
     # INTERFACE 

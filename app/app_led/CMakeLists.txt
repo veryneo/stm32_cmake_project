@@ -17,6 +17,7 @@ target_link_libraries(lib_app_led
     PUBLIC
     lib_app_led_intf
     PRIVATE
+    lib_shell_intf
     lib_threadx_intf
     lib_bsp_intf
 )

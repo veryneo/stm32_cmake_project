@@ -1,3 +1,4 @@
+clear
 echo "Project building start."
 #DIR=build
 DIR_BUILD_DEBUG=build/debug

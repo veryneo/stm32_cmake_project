@@ -19,7 +19,9 @@ target_include_directories(${PRJ_EXE_NAME}
 target_link_libraries(${PRJ_EXE_NAME} 
     PRIVATE   
     lib_app_entry
+    lib_app_shell
     lib_app_led
+    lib_shell
     lib_threadx
     lib_bsp
     lib_hal
@@ -27,7 +29,9 @@ target_link_libraries(${PRJ_EXE_NAME}
 )
 add_dependencies(${PRJ_EXE_NAME}    
     lib_app_entry
+    lib_app_shell
     lib_app_led
+    lib_shell
     lib_threadx
     lib_bsp
     lib_hal
