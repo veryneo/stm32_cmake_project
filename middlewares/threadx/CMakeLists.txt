@@ -4,7 +4,7 @@ add_library(lib_threadx_intf INTERFACE)
 target_include_directories(lib_threadx_intf 
     INTERFACE 
     ./common/inc
-    ./ports/cortex_m4/gnu/inc
+    ./ports/${PRJ_MCU_CORE}/gnu/inc
 )
 
 add_library(lib_threadx STATIC)
@@ -166,17 +166,17 @@ target_sources(lib_threadx
     ./common/src/txe_timer_deactivate.c
     ./common/src/txe_timer_delete.c
     ./common/src/txe_timer_info_get.c
-    ./ports/cortex_m4/gnu/src/tx_thread_context_restore.S
-    ./ports/cortex_m4/gnu/src/tx_thread_context_save.S
-    ./ports/cortex_m4/gnu/src/tx_thread_interrupt_control.S
-    ./ports/cortex_m4/gnu/src/tx_thread_interrupt_disable.S
-    ./ports/cortex_m4/gnu/src/tx_thread_interrupt_restore.S
-    ./ports/cortex_m4/gnu/src/tx_thread_schedule.S
-    ./ports/cortex_m4/gnu/src/tx_thread_stack_build.S
-    ./ports/cortex_m4/gnu/src/tx_thread_system_return.S
-    ./ports/cortex_m4/gnu/src/tx_timer_interrupt.S
+    ./ports/${PRJ_MCU_CORE}/gnu/src/tx_thread_context_restore.S
+    ./ports/${PRJ_MCU_CORE}/gnu/src/tx_thread_context_save.S
+    ./ports/${PRJ_MCU_CORE}/gnu/src/tx_thread_interrupt_control.S
+    ./ports/${PRJ_MCU_CORE}/gnu/src/tx_thread_interrupt_disable.S
+    ./ports/${PRJ_MCU_CORE}/gnu/src/tx_thread_interrupt_restore.S
+    ./ports/${PRJ_MCU_CORE}/gnu/src/tx_thread_schedule.S
+    ./ports/${PRJ_MCU_CORE}/gnu/src/tx_thread_stack_build.S
+    ./ports/${PRJ_MCU_CORE}/gnu/src/tx_thread_system_return.S
+    ./ports/${PRJ_MCU_CORE}/gnu/src/tx_timer_interrupt.S
 )
 target_link_libraries(lib_threadx
-    PRIVATE
+    PUBLIC
     lib_threadx_intf
 )

@@ -21,6 +21,8 @@ target_link_libraries(${PRJ_EXE_NAME}
     lib_app_entry
     lib_app_shell
     lib_app_led
+    lib_app_log_one
+    lib_app_log_two
     lib_shell
     lib_threadx
     lib_bsp
@@ -31,6 +33,8 @@ add_dependencies(${PRJ_EXE_NAME}
     lib_app_entry
     lib_app_shell
     lib_app_led
+    lib_app_log_one
+    lib_app_log_two
     lib_shell
     lib_threadx
     lib_bsp

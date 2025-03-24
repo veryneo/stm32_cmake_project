@@ -19,5 +19,7 @@ target_link_libraries(lib_app_entry
     PRIVATE
     lib_app_shell_intf
     lib_app_led_intf
+    lib_app_log_one_intf
+    lib_app_log_two_intf
     lib_threadx_intf
 )

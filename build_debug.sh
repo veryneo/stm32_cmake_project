@@ -15,6 +15,7 @@ else
 fi
 
 rm -rf *
-cmake ../.. -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=../../custom_gcc.cmake
+cmake ../.. -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=../../custom_gcc.cmake --graphviz=dependencies.dot
+dot -Tpng dependencies.dot -o dependencies.png
 
 ninja

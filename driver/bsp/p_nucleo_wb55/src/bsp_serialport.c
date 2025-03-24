@@ -56,9 +56,9 @@
 #define D_BSP_SERIALPORT_UART_RX_DMA_IRQ_PRIORITY		(0)
 #define D_BSP_SERIALPORT_UART_RX_DMA_IRQ_SUBPRIORITY	(0)
 
-#define D_BSP_SERIALPORT_UART_TX_RING_BUFFER_SIZE		(256+1)
+#define D_BSP_SERIALPORT_UART_TX_RING_BUFFER_SIZE		(512+1)
 #define D_BSP_SERIALPORT_UART_RX_RING_BUFFER_SIZE		(256+1)
-#define D_BSP_SERIALPORT_UART_TX_DMA_BUFFER_SIZE		(256)	/* DMA buffer size should be equal to FIFO buffer to maximize transmission efficiency*/
+#define D_BSP_SERIALPORT_UART_TX_DMA_BUFFER_SIZE		(512)	/* DMA buffer size should be equal to FIFO buffer to maximize transmission efficiency*/
 #define D_BSP_SERIALPORT_UART_RX_DMA_BUFFER_SIZE		(256)
 
 
@@ -152,7 +152,6 @@ extern int32_t bsp_serialport_send()
 	do
 	{
 		if (gs_bsp_serialport_handle.uart_tx_dma_status != E_BSP_SERIALPORT_UART_TX_DMA_STATUS_READY)
-
 		{
 			/* UART TX DMA status busy */
 			ret = D_BSP_RET_UART_TX_DMA_BUSY;
@@ -235,7 +234,7 @@ extern int32_t bsp_serialport_receive_enable()
  * @retval		D_BSP_RET_INPUT_ERROR
  * @author      chenwei.gu@murata.com
  */
-extern int32_t bsp_serialport_send_cache_set(const uint8_t* buf, uint16_t size)
+extern int32_t bsp_serialport_send_cache_data_set(const uint8_t* buf, uint16_t size)
 {
 	if (!buf)
 	{
@@ -254,7 +253,7 @@ extern int32_t bsp_serialport_send_cache_set(const uint8_t* buf, uint16_t size)
  * @retval		D_BSP_RET_INPUT_ERROR
  * @author      chenwei.gu@murata.com
  */
-extern int32_t bsp_serialport_send_cache_get(uint8_t* buf, uint16_t size)
+extern int32_t bsp_serialport_send_cache_data_get(uint8_t* buf, uint16_t size)
 {
 	if (!buf)
 	{
@@ -265,7 +264,7 @@ extern int32_t bsp_serialport_send_cache_get(uint8_t* buf, uint16_t size)
 	return lwrb_read(gs_bsp_serialport_handle.p_uart_tx_ring_buf, buf, (lwrb_sz_t)size);
 }
 
-extern int32_t bsp_serialport_send_cache_check()
+extern int32_t bsp_serialport_send_cache_used_size_get()
 {
 	if (lwrb_is_ready(gs_bsp_serialport_handle.p_uart_tx_ring_buf) == 0)
 	{
@@ -286,7 +285,7 @@ extern int32_t bsp_serialport_send_cache_check()
  * @retval		D_BSP_RET_INPUT_ERROR
  * @author      chenwei.gu@murata.com
  */
-extern int32_t bsp_serialport_receive_cache_get(uint8_t* buf, uint16_t size)
+extern int32_t bsp_serialport_receive_cache_data_get(uint8_t* buf, uint16_t size)
 {
 	if (!buf)
 	{
@@ -463,6 +462,13 @@ extern void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 	{
 		/* Set UART TX DMA status to ready */
 		gs_bsp_serialport_handle.uart_tx_dma_status = E_BSP_SERIALPORT_UART_TX_DMA_STATUS_READY;
+
+		/* Check for remaining data to send */
+		if (lwrb_get_full(gs_bsp_serialport_handle.p_uart_tx_ring_buf) >0)
+		{
+			/* Continue sending data */
+			bsp_serialport_send();
+		}
 	}
 }
 
@@ -512,6 +518,11 @@ extern void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef* huart, uint16_t Size)
 			}
 
 			dma_buf_last_size = dma_buf_curr_size;
+
+			if (gs_bsp_serialport_handle.p_uart_rx_callcack != NULL)
+			{
+				gs_bsp_serialport_handle.p_uart_rx_callcack();
+			}
 		}
 	}
 }
