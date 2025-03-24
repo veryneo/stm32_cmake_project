@@ -1,12 +1,5 @@
 project(threadx)
 
-add_library(lib_threadx_intf INTERFACE)
-target_include_directories(lib_threadx_intf 
-    INTERFACE 
-    ./common/inc
-    ./ports/${PRJ_MCU_CORE}/gnu/inc
-)
-
 add_library(lib_threadx STATIC)
 target_sources(lib_threadx
     PRIVATE
@@ -176,7 +169,8 @@ target_sources(lib_threadx
     ./ports/${PRJ_MCU_CORE}/gnu/src/tx_thread_system_return.S
     ./ports/${PRJ_MCU_CORE}/gnu/src/tx_timer_interrupt.S
 )
-target_link_libraries(lib_threadx
-    PUBLIC
-    lib_threadx_intf
+target_include_directories(lib_threadx
+    PUBLIC 
+    ./common/inc
+    ./ports/${PRJ_MCU_CORE}/gnu/inc
 )

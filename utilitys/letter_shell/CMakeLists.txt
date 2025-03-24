@@ -1,17 +1,5 @@
 project(SHELL)
 
-add_library(lib_shell_intf INTERFACE)
-target_include_directories(lib_shell_intf
-    INTERFACE
-    ./core/inc
-    ./port/inc
-    ./extensions/log/inc
-)
-target_compile_definitions(lib_shell_intf 
-    INTERFACE 
-    -DSHELL_CFG_USER="shell_cfg_user.h"
-)
-
 add_library(lib_shell STATIC)
 target_sources(lib_shell
     PRIVATE
@@ -23,10 +11,18 @@ target_sources(lib_shell
     ./port/src/shell_mem.c
     ./extensions/log/src/log.c
 )
-target_link_libraries(lib_shell
+target_include_directories(lib_shell
     PUBLIC
-    lib_shell_intf
+    ./core/inc
+    ./port/inc
+    ./extensions/log/inc
+)
+target_compile_definitions(lib_shell
+    PUBLIC
+    -DSHELL_CFG_USER="shell_cfg_user.h"
+)
+target_link_libraries(lib_shell
     PRIVATE
-    lib_threadx_intf
+    lib_threadx
     lib_bsp
 )

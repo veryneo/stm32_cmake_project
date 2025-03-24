@@ -13,7 +13,7 @@ extern void app_log_two_run()
 {
     while(1)
     {
-    	logInfo("Log Two Output\r\n");
+    	logInfo("Log two output\r\n");
         tx_thread_sleep(1000);
     }
 }
