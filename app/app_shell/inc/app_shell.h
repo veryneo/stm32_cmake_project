@@ -1,5 +1,5 @@
-#ifndef __APP_SHELL_H
-#define __APP_SHELL_H
+#ifndef APP_SHELL_H
+#define APP_SHELL_H
 
 #ifdef __cplusplus
 extern "C" {

@@ -1,5 +1,5 @@
-#ifndef __APP_LOG_ONE_H
-#define __APP_LOG_ONE_H
+#ifndef APP_LOG_ONE_H
+#define APP_LOG_ONE_H
 
 #ifdef __cplusplus
 extern "C" {

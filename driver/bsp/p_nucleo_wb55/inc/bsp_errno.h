@@ -1,5 +1,5 @@
-#ifndef __BSP_ERRNO_H
-#define __BSP_ERRNO_H
+#ifndef BSP_ERRNO_H
+#define BSP_ERRNO_H
 
 #ifdef __cplusplus
 extern "C" {

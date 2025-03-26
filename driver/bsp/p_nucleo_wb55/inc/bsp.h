@@ -1,5 +1,5 @@
-#ifndef __BSP_H
-#define __BSP_H
+#ifndef BSP_H
+#define BSP_H
 
 #ifdef __cplusplus
 extern "C" {

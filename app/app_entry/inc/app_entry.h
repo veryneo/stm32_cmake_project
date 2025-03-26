@@ -1,5 +1,5 @@
-#ifndef __APP_ENTRY_H
-#define __APP_ENTRY_H
+#ifndef APP_ENTRY_H
+#define APP_ENTRY_H
 
 #ifdef __cplusplus
 extern "C" {

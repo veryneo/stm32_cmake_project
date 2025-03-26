@@ -86,7 +86,7 @@ typedef struct
 	uint8_t*								p_uart_tx_dma_buf;				/* UART TX DMA buffer */
 	uint8_t*								p_uart_rx_dma_buf;				/* UART RX DMA buffer */
 	E_BSP_SERIALPORT_UART_TX_DMA_STATUS_T	uart_tx_dma_status;				/* UART TX DMA status */
-	void									(*p_uart_rx_callcack)(void);	/* UART RX callback*/
+	void									(*p_uart_rx_callback)(void);	/* UART RX callback*/
 } S_BSP_SERIALPORT_HANDLE_T;
 
 
@@ -298,15 +298,18 @@ extern int32_t bsp_serialport_receive_cache_data_get(uint8_t* buf, uint16_t size
 
 /**
  * @brief       Serialport receive callback function set
- * @param		p_uart_rx_callcack 		Pointer to UART RX callback function
+ * @param		p_uart_rx_callback 		Pointer to UART RX callback function
  * @retval		D_BSP_RET_OK
  * @retval		D_BSP_RET_INPUT_ERROR
  * @author      chenwei.gu@murata.com
  */
-extern int32_t bsp_serialport_receive_callback_set(void (*p_uart_rx_callcack)(void) )
+extern int32_t bsp_serialport_receive_callback_set(void (*p_uart_rx_callback)(void) )
 {
-	if (!p_uart_rx_callcack)
+	if (!p_uart_rx_callback)
 	{
+		/* Reset UART RX callback function */
+		gs_bsp_serialport_handle.p_uart_rx_callback = NULL;
+
 		return D_BSP_RET_INPUT_ERR;
 	}
 
@@ -315,7 +318,7 @@ extern int32_t bsp_serialport_receive_callback_set(void (*p_uart_rx_callcack)(vo
 	do
 	{
 		/* Set UART RX callback function */
-		gs_bsp_serialport_handle.p_uart_rx_callcack = p_uart_rx_callcack;
+		gs_bsp_serialport_handle.p_uart_rx_callback = p_uart_rx_callback;
 
 		ret = D_BSP_RET_OK;
 	} while (0);
@@ -356,7 +359,7 @@ extern void HAL_UART_MspInit(UART_HandleTypeDef* huart)
 	    GPIO_InitStruct.Pull 		= GPIO_PULLUP;
 	    GPIO_InitStruct.Speed 		= GPIO_SPEED_FREQ_VERY_HIGH;
 	    GPIO_InitStruct.Alternate 	= D_BSP_SERIALPORT_UART_AF;
-	    HAL_GPIO_Init(D_BSP_SERIALPORT_UART_TX_GPIO_PORT, &GPIO_InitStruct);
+	    HAL_GPIO_Init(D_BSP_SERIALPORT_UART_RX_GPIO_PORT, &GPIO_InitStruct);
 
 		/* UART interrupt initialization */
 	    HAL_NVIC_SetPriority(D_BSP_SERIALPORT_UART_IRQ_NUMBER, D_BSP_SERIALPORT_UART_IRQ_PRIORITY, D_BSP_SERIALPORT_UART_IRQ_SUBPRIORITY);
@@ -443,6 +446,7 @@ extern void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
 	    HAL_GPIO_DeInit(D_BSP_SERIALPORT_UART_RX_GPIO_PORT, D_BSP_SERIALPORT_UART_RX_GPIO_PIN);
 
 		/* UART DMA deInit */
+		HAL_DMA_DeInit(huart->hdmatx);
     	HAL_DMA_DeInit(huart->hdmarx);
 
 		/* UART interrupt deInit */
@@ -519,9 +523,9 @@ extern void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef* huart, uint16_t Size)
 
 			dma_buf_last_size = dma_buf_curr_size;
 
-			if (gs_bsp_serialport_handle.p_uart_rx_callcack != NULL)
+			if (gs_bsp_serialport_handle.p_uart_rx_callback != NULL)
 			{
-				gs_bsp_serialport_handle.p_uart_rx_callcack();
+				gs_bsp_serialport_handle.p_uart_rx_callback();
 			}
 		}
 	}

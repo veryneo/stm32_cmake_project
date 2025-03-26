@@ -1,5 +1,5 @@
-#ifndef __APP_LED_H
-#define __APP_LED_H
+#ifndef APP_LED_H
+#define APP_LED_H
 
 #ifdef __cplusplus
 extern "C" {

@@ -1,5 +1,5 @@
-#ifndef __STM32WBXX_IT_H
-#define __STM32WBXX_IT_H
+#ifndef STM32WBXX_IT_H
+#define STM32WBXX_IT_H
 
 #ifdef __cplusplus
  extern "C" {

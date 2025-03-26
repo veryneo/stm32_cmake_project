@@ -1,5 +1,5 @@
-#ifndef __BSP_LED_H
-#define __BSP_LED_H
+#ifndef BSP_LED_H
+#define BSP_LED_H
 
 #ifdef __cplusplus
 extern "C" {
