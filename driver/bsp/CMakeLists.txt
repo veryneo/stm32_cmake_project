@@ -4,7 +4,8 @@ add_library(lib_bsp STATIC)
 target_sources(lib_bsp 
     PRIVATE 
     ./${PRJ_BOARD_NAME}/src/bsp_led.c
-    ./${PRJ_BOARD_NAME}/src/bsp_serialport.c    
+    ./${PRJ_BOARD_NAME}/src/bsp_serialport.c 
+    ./${PRJ_BOARD_NAME}/src/bsp_button.c   
 )
 target_include_directories(lib_bsp
     PUBLIC  

@@ -5,6 +5,7 @@ add_subdirectory(app_shell)
 add_subdirectory(app_led)
 add_subdirectory(app_log_one)
 add_subdirectory(app_log_two)
+add_subdirectory(app_button)
 
 
 

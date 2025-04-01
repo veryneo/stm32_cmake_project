@@ -15,5 +15,6 @@ target_link_libraries(lib_app_entry
     lib_app_led
     lib_app_log_one
     lib_app_log_two
+    lib_app_button
     lib_threadx
 )
